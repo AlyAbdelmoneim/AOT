@@ -158,7 +158,7 @@ public class Battle {
 
     public void purchaseWeapon(int weaponCode, Lane lane) throws InsufficientResourcesException, InvalidLaneException {
         if (!this.getLanes().contains(lane)) {
-            throw new InvalidLaneException("Weapon purchase failed");
+            throw new InvalidLaneException("The lane you are trying to add to is lost");
         }
 
         FactoryResponse factoryResponse = this.getWeaponFactory().buyWeapon(getResourcesGathered(), weaponCode);

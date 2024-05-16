@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class HomeController {
     private AudioClip clickSoundClip;
-    private AudioClip backgroundMusicClip;
+    AudioClip backgroundMusicClip;
     private boolean isMusicPlaying = false;
     private ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("images/play.png")));
     public HomeController() {
@@ -65,6 +65,8 @@ public class HomeController {
     @FXML
     public void switchToChoiceScene(ActionEvent event) throws IOException {
         switchScene("views/ChoiceScene.fxml", event);
+        //close the media playing in the background
+//        backgroundMusicClip.stop();
     }
     @FXML
     private void switchToGamePlaySceneEasy(ActionEvent event) throws Exception {
@@ -73,6 +75,7 @@ public class HomeController {
         // Get the current stage and close it
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
+        backgroundMusicClip.stop();
     }
     @FXML
     private void switchToGamePlaySceneMedium(ActionEvent event) throws Exception {
@@ -81,6 +84,7 @@ public class HomeController {
         // Get the current stage and close it
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
+        backgroundMusicClip.stop();
     }
 
 }

@@ -8,6 +8,7 @@ import game.engine.titans.AbnormalTitan;
 import game.engine.titans.ArmoredTitan;
 import game.engine.titans.ColossalTitan;
 import game.engine.titans.Titan;
+import game.engine.weapons.Weapon;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +29,8 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javafx.application.Application.launch;
 
@@ -90,8 +93,9 @@ public class Controller {
         Pane pane = new Pane();
         Label label = new Label(message);
         Label score = new Label("Score: " + easyBattle.getScore());
+        score.setLayoutX(10);
+        score.setLayoutY(30);
         Button returnToHomeScreen = new Button("Return to Home Screen");
-//        returnToHomeScreen.getStyleClass().add("btn-home"); // Applying CSS class
         returnToHomeScreen.setOnAction(e -> {
             try {
                 returnToHomeScreen();
@@ -114,8 +118,6 @@ public class Controller {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
-
-        // Close the current stage (the game GUI)
         gamePlayGUI.getStage().close();
     }
 
@@ -138,7 +140,13 @@ public class Controller {
         vBox.setSpacing(10);
 
         Label weaponLabel = new Label("Choose Weapon");
-        ComboBox<String> weaponComboBox = new ComboBox<>(FXCollections.observableArrayList("Piercing Cannon", "Sniper ", "Volley Spread", "Wall Trap"));
+        ComboBox<String> weaponComboBox = new ComboBox<>(FXCollections.observableArrayList(
+                "Piercing Cannon \n Type : Anti Titan Shell   \n Price : 25  \n Damage : 10"
+                , "Sniper Cannon      \n Type: Long Range Spear    \n Price : 25  \n Damage : 35"
+                , "Volley Spread      \n Type : Wall Spread Cannon \n Price : 100 \n Damage : 5"
+                , "Wall Trap          \n Type : Proximity Trap     \n Price : 75  \n Damage : 100"
+        )
+        );
         weaponComboBox.getSelectionModel().selectFirst();
 
         Label laneLabel = new Label("Choose Lane");
@@ -162,13 +170,25 @@ public class Controller {
         Pane laneInfoPane = new Pane();
         laneInfoPane.setPrefSize(300, 200);
 
-        Label laneInfoLabel = new Label("Lane Information");
+//        Label laneInfoLabel = new Label("Lane Information");
         Label laneDangerLevel = new Label("Lane Danger Level: " + easyBattle.getOriginalLanes().get(laneIndex).getDangerLevel());
         Label wallCurrentHealth = new Label("Wall Current Health: " + easyBattle.getOriginalLanes().get(laneIndex).getLaneWall().getCurrentHealth());
+        Label AvailableWeapons = new Label("Available Weapons: " + getWeaponsOfLane(easyBattle.getOriginalLanes().get(laneIndex)));
+        Label numberOfAvailableTitans = new Label("Available Titans: " + getTitansOfLane(easyBattle.getOriginalLanes().get(laneIndex)));
+        Label isLaneLost;
+        if(easyBattle.getOriginalLanes().get(laneIndex).isLaneLost()) {
+            isLaneLost = new Label("Lane is Lost");
+            isLaneLost.setTextFill(Color.RED);
+        }
+        else {
+            isLaneLost = new Label("Lane is Available");
+            isLaneLost.setTextFill(Color.GREEN);
+        }
+
         Button exit = new Button("Exit");
 
-        laneInfoLabel.setLayoutX(10);
-        laneInfoLabel.setLayoutY(10);
+//        laneInfoLabel.setLayoutX(10);
+//        laneInfoLabel.setLayoutY(10);
 
         wallCurrentHealth.setLayoutX(10);
         wallCurrentHealth.setLayoutY(40);
@@ -176,12 +196,21 @@ public class Controller {
         laneDangerLevel.setLayoutX(10);
         laneDangerLevel.setLayoutY(70);
 
+        AvailableWeapons.setLayoutX(10);
+        AvailableWeapons.setLayoutY(100);
+
+        numberOfAvailableTitans.setLayoutX(10);
+        numberOfAvailableTitans.setLayoutY(130);
+
+        isLaneLost.setLayoutX(10);
+        isLaneLost.setLayoutY(160);
+
         exit.setLayoutX(10);
-        exit.setLayoutY(100);
+        exit.setLayoutY(190);
 
         exit.setOnAction(e -> ((Stage) exit.getScene().getWindow()).close());
 
-        laneInfoPane.getChildren().addAll(laneInfoLabel, laneDangerLevel, wallCurrentHealth, exit);
+        laneInfoPane.getChildren().addAll(laneDangerLevel, wallCurrentHealth, AvailableWeapons, numberOfAvailableTitans, exit);
 
         Scene scene = new Scene(laneInfoPane, 300, 200);
         Stage stage = new Stage();
@@ -190,9 +219,52 @@ public class Controller {
         stage.setTitle("Lane " + laneIndex + " Information");
         stage.show();
     }
+    private String getWeaponsOfLane(Lane lane) {
+        String weapons = "( ";
+        HashSet<String> weaponsSet = new HashSet<>();
+        for (Weapon weapon : lane.getWeapons()) {
+            String name = "";
+            switch (weapon.getClass().getSimpleName()) {
+                case "PiercingCannon":
+                    name = "Piercing Cannon";
+                    break;
+                case "SniperCannon":
+                    name = "Sniper";
+                    break;
+                case "VolleySpreadCannon":
+                    name = "Volley Spread";
+                    break;
+                case "WallTrap":
+                    name = "Wall Trap";
+                    break;
+            }
+            weaponsSet.add(name);
+        }
+        for (String weapon : weaponsSet) {
+            weapons += weapon + ", ";
+        }
+        weapons += ")";
+        return weapons;
+    }
+    private String getTitansOfLane(Lane lane) {
+        StringBuilder titans = new StringBuilder("( ");
+        HashSet<String> titansSet = new HashSet<>();
 
-    public static void openTitanInfoWindow(String titanName, int titanHealth, int titanDamage, int distance) {
+        for (Titan titan : lane.getTitans()) {
+            String name = titan.getClass().getSimpleName();
+            titansSet.add(name);
+        }
 
+        for (String titan : titansSet) {
+            titans.append(titan).append(", ");
+        }
+
+        titans.append(")");
+        return titans.toString();
+    }
+
+
+    public static void openTitanInfoWindow(String titanName, int titanHealth, int titanDamage, int distance, int height) {
         VBox vBox = new VBox();
         vBox.setPadding(new Insets(10));
         vBox.setSpacing(10);
@@ -202,8 +274,9 @@ public class Controller {
         Label titanHealthLabel = new Label("Titan Health: " + titanHealth);
         Label titanDamageLabel = new Label("Titan Damage: " + titanDamage);
         Label distanceLabel = new Label("Distance: " + distance);
+        Label heightLabel = new Label("Height: " + height);
 
-        vBox.getChildren().addAll(label, titanNameLabel, titanHealthLabel, titanDamageLabel, distanceLabel);
+        vBox.getChildren().addAll(label, titanNameLabel, titanHealthLabel, titanDamageLabel, distanceLabel,heightLabel);
 
         Pane pane = new Pane(vBox);
 
@@ -242,7 +315,7 @@ public class Controller {
                     offset = 200;
                 }
 
-                circle.setOnMouseClicked(e -> openTitanInfoWindow(titanName, t.getCurrentHealth(), t.getDamage(), t.getDistance()));
+                circle.setOnMouseClicked(e -> openTitanInfoWindow(titanName, t.getCurrentHealth(), t.getDamage(), t.getDistance(), t.getHeightInMeters()));
                 titans.getChildren().add(circle);
 
 

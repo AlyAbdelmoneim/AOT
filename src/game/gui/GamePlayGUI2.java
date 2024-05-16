@@ -149,4 +149,8 @@ public class GamePlayGUI2 extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public Stage getStage() {
+        return (Stage) mainGrid.getScene().getWindow();
+    }
 }
