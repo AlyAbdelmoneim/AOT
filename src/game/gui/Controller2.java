@@ -20,9 +20,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -38,6 +41,7 @@ public class Controller2 {
     private GamePlayGUI2 gamePlayGUI;
 
     private ArrayList<Lane> lanes = new ArrayList<>();
+    private boolean gameOverTriggered = false;
 
     public Controller2() throws Exception {
         easyBattle = new Battle(1, 0, 80, 5, 125);
@@ -55,6 +59,7 @@ public class Controller2 {
         updateLabels();
         addTitans();
     }
+
     public void gameEndStage(String message) {
         Pane pane = new Pane();
         Label label = new Label(message);
@@ -73,9 +78,21 @@ public class Controller2 {
         Scene scene = new Scene(pane, 300, 200);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.show();
 
+        // Set modality and owner to ensure the popup is on top
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(gamePlayGUI.getStage());
+
+        stage.show();
     }
+
+    public void playGameOverSound() {
+        String musicFile = "src/game/gui/sounds/gameover.mp3"; // Path to your game over MP3 file
+        Media sound = new Media(new File(musicFile).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
+    }
+
     public void returnToHomeScreen() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("views/gui.fxml"));
         Parent root = loader.load();
@@ -99,7 +116,11 @@ public class Controller2 {
         try {
             easyBattle.passTurn();
         } catch (NullPointerException e) {
-            gameEndStage("Game Over");
+            if (!gameOverTriggered) {
+                gameOverTriggered = true;
+                playGameOverSound();
+                gameEndStage("Game Over");
+            }
         }
         updateUI();
         gamePlayGUI.updateLabels(easyBattle.getNumberOfTurns(), easyBattle.getScore(),
@@ -167,6 +188,7 @@ public class Controller2 {
         stage.setScene(scene);
         stage.show();
     }
+
     private String getWeaponsOfLane(Lane lane) {
         String weapons = "( ";
         HashSet<String> weaponsSet = new HashSet<>();
@@ -194,6 +216,7 @@ public class Controller2 {
         weapons += ")";
         return weapons;
     }
+
     ////////////////////////////////////////////
     private String getTitansOfLane(Lane lane) {
         StringBuilder titans = new StringBuilder("( ");
@@ -287,20 +310,17 @@ public class Controller2 {
                 Circle circle = new Circle(30);
                 String titanName = t.getClass().getSimpleName();
                 int offset = 0;
-                if(t instanceof ColossalTitan) {
-                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/ColossalPng.jpeg").toURI().toString())));
+                if (t instanceof ColossalTitan) {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/ColossalPng.png").toURI().toString())));
                     offset = 40;
-                }
-                else if(t instanceof ArmoredTitan) {
+                } else if (t instanceof ArmoredTitan) {
                     circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/armored.png").toURI().toString())));
                     offset = 80;
 
-                }
-                else if(t instanceof AbnormalTitan) {
+                } else if (t instanceof AbnormalTitan) {
                     circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/abnormal.png").toURI().toString())));
                     offset = 120;
-                }
-                else {
+                } else {
                     circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/pure.png").toURI().toString())));
                     offset = 160;
                 }
@@ -323,6 +343,46 @@ public class Controller2 {
             }
             counter++;
         }
+    }
+
+    public void showPopupMenu(Stage primaryStage) {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.initOwner(primaryStage);
+
+        VBox popupVBox = new VBox();
+        popupVBox.setSpacing(10);
+        popupVBox.setPadding(new Insets(20));
+
+        Label sureLabel = new Label("Are you sure you want to exit the game?");
+
+        Button continueButton = new Button("Continue");
+        continueButton.setOnAction(e -> popupStage.close());
+
+        Button homeButton = new Button("Return To Home");
+        homeButton.setOnAction(e -> {
+            // Code to return to home screen
+            try {
+                returnToHomeScreen();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            // Assuming you have a method to launch the home screen
+            // new HomeScreen().start(new Stage());
+        });
+
+        // Add CSS classes
+        popupVBox.getStyleClass().add("popup-vbox");
+        sureLabel.getStyleClass().add("exitLabel");
+        continueButton.getStyleClass().add("inGamePopupContinue");
+        homeButton.getStyleClass().add("inGamePopupExit");
+
+        popupVBox.getChildren().addAll(sureLabel, continueButton, homeButton);
+
+        Scene popupScene = new Scene(popupVBox, 700, 300);
+        popupScene.getStylesheets().add(getClass().getResource("css/HomeButtons.css").toExternalForm());
+        popupStage.setScene(popupScene);
+        popupStage.showAndWait();
     }
 
     public static void main(String[] args) {

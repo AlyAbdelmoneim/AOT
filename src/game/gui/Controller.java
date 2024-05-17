@@ -8,7 +8,7 @@ import game.engine.titans.AbnormalTitan;
 import game.engine.titans.ArmoredTitan;
 import game.engine.titans.ColossalTitan;
 import game.engine.titans.Titan;
-import game.engine.weapons.Weapon;
+import game.engine.weapons.*;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -20,9 +20,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -40,21 +43,28 @@ public class Controller {
 
     private ArrayList<Lane> lanes = new ArrayList<>();
 
+    private boolean gameOverTriggered = false;
+    private HashSet<Integer>[] weaponsInLanes;
     public Controller() throws Exception {
         easyBattle = new Battle(1, 0, 80, 3, 250);
         gamePlayGUI = new GamePlayGUI();
         gamePlayGUI.setController(this);
-        updateUI();
         gamePlayGUI.start(new Stage());
         gamePlayGUI.passTurn.setOnAction(e -> passTurn());
         gamePlayGUI.purchaseWeapon.setOnAction(e -> chooseWeaponAndLane(new Stage()));
         lanes = new ArrayList<>();
         lanes.addAll(easyBattle.getLanes());
+        weaponsInLanes = new HashSet[3];
+        for(int i = 0; i < 3; i++){
+            weaponsInLanes[i] = new HashSet<>();
+        }
+        updateUI();
     }
 
     private void updateUI() {
         updateLabels();
         addTitans();
+        updateWeapons();
     }
 
     private void updateLabels() {
@@ -65,12 +75,131 @@ public class Controller {
         gamePlayGUI.updateLabels(easyBattle.getNumberOfTurns(), easyBattle.getScore(),
                 easyBattle.getResourcesGathered(), easyBattle.getBattlePhase(), wallHealths);
     }
+    private void updateWeapons(){
+        for(int i = 0; i < 3; i++) {
+            for(int x : weaponsInLanes[i]){
+                Circle circle = new Circle(40);
+                int offset = -30;
+                if(x == 1) {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/piercing.png").toURI().toString())));
+                    offset += 20;
+                }
+                else if(x == 2) {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/sniper.png").toURI().toString())));
+                    offset += 70;
+                }
+                else if(x == 3) {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/volley.png").toURI().toString())));
+                    offset += 110;
+                }
+                else {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/walltrap.png").toURI().toString())));
+                    offset += 150;
+                }
+                gamePlayGUI.lane1Weapons.getChildren().add(circle);
+                circle.setTranslateX(0);
+                circle.setTranslateY(i * 300 + offset);
+            }
+        }
+    }
+//    private void updateWeapons(){
+//        for(int i = 0; i < 3; i++){
+//            if(i == 0){
+//                gamePlayGUI.lane1Weapons.getChildren().clear();
+//                for(Weapon w : easyBattle.getOriginalLanes().get(i).getWeapons()){
+//                    Circle circle = new Circle(30);
+////                    String weaponName = w.getClass().getSimpleName();
+//                    int offset = 0;
+//                    if(w instanceof PiercingCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/piercing.png").toURI().toString())));
+//                        offset = 50;
+//                    }
+//                    else if(w instanceof SniperCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/sniper.png").toURI().toString())));
+//                        offset = 100;
+//                    }
+//                    else if(w instanceof VolleySpreadCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/volley.png").toURI().toString())));
+//                        offset = 150;
+//                    }
+//                    else {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/walltrap.png").toURI().toString())));
+//                        offset = 200;
+//                    }
+//                    gamePlayGUI.lane1Weapons.getChildren().add(circle);
+////                    circle.setOnMouseClicked(e -> openWeaponInfoWindow(weaponName, w.getDamage(), w.getRange(), w.getPrice()));
+//                    circle.setTranslateX(0);
+//                    circle.setTranslateY(i * 300 + offset);
+//                }
+//            }
+//            else if(i == 1){
+//                gamePlayGUI.lane2Weapons.getChildren().clear();
+//                for(Weapon w : easyBattle.getOriginalLanes().get(i).getWeapons()){
+//                    Circle circle = new Circle(30);
+//
+//                    int offset = 0;
+//                    if(w instanceof PiercingCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/piercing.png").toURI().toString())));
+//                        offset = 50;
+//                    }
+//                    else if(w instanceof SniperCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/sniper.png").toURI().toString())));
+//                        offset = 100;
+//                    }
+//                    else if(w instanceof VolleySpreadCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/volley.png").toURI().toString())));
+//                        offset = 150;
+//                    }
+//                    else {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/walltrap.png").toURI().toString())));
+//                        offset = 200;
+//                    }
+//                    gamePlayGUI.lane2Weapons.getChildren().add(circle);
+////                    circle.setOnMouseClicked(e -> openWeaponInfoWindow(weaponName, w.getDamage(), w.getRange(), w.getPrice()));
+//                    circle.setTranslateX(0);
+//                    circle.setTranslateY(i * 300 + offset);
+//                }
+//            }
+//            else{
+//                gamePlayGUI.lane3Weapons.getChildren().clear();
+//                for(Weapon w : easyBattle.getOriginalLanes().get(i).getWeapons()){
+//                    Circle circle = new Circle(30);
+//
+//                    int offset = 0;
+//                    if(w instanceof PiercingCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/piercing.png").toURI().toString())));
+//                        offset = 50;
+//                    }
+//                    else if(w instanceof SniperCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/sniper.png").toURI().toString())));
+//                        offset = 100;
+//                    }
+//                    else if(w instanceof VolleySpreadCannon) {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/volley.png").toURI().toString())));
+//                        offset = 150;
+//                    }
+//                    else {
+//                        circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/walltrap.png").toURI().toString())));
+//                        offset = 200;
+//                    }
+//                    gamePlayGUI.lane3Weapons.getChildren().add(circle);
+////                    circle.setOnMouseClicked(e -> openWeaponInfoWindow(weaponName, w.getDamage(), w.getRange(), w.getPrice()));
+//                    circle.setTranslateX(0);
+//                    circle.setTranslateY(i * 300 + offset);
+//                }
+//            }
+//        }
+//    }
 
     public void passTurn() {
         try {
             easyBattle.passTurn();
         } catch (NullPointerException e) {
-            gameEndStage("Game Over");
+            if (!gameOverTriggered) {
+                gameOverTriggered = true;
+                playGameOverSound();
+                gameEndStage("Game Over");
+            }
         }
         updateUI();
         gamePlayGUI.updateLabels(easyBattle.getNumberOfTurns(), easyBattle.getScore(),
@@ -107,8 +236,20 @@ public class Controller {
         Scene scene = new Scene(pane, 300, 200);
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.show();
 
+        // Set modality and owner to ensure the popup is on top
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(gamePlayGUI.getStage());
+
+        stage.show();
+    }
+
+
+    public void playGameOverSound() {
+        String musicFile = "src/game/gui/sounds/gameover.mp3"; // Path to your game over MP3 file
+        Media sound = new Media(new File(musicFile).toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(sound);
+        mediaPlayer.play();
     }
 
     public void returnToHomeScreen() throws IOException {
@@ -123,6 +264,48 @@ public class Controller {
 
 
     public void purchaseWeapon(int laneIndex, int weaponIndex) {
+        if(weaponIndex == 0){
+            if(weaponsInLanes[laneIndex] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(1);
+                weaponsInLanes[laneIndex] = tmp;
+            }
+            else {
+                weaponsInLanes[laneIndex].add(1);
+            }
+        }
+        else if(weaponIndex == 1){
+            if(weaponsInLanes[laneIndex] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(2);
+                weaponsInLanes[laneIndex] = tmp;
+            }
+            else {
+                weaponsInLanes[laneIndex].add(2);
+            }
+
+        }
+        else if(weaponIndex == 2){
+            if(weaponsInLanes[laneIndex] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(3);
+                weaponsInLanes[laneIndex] = tmp;
+            }
+            else {
+                weaponsInLanes[laneIndex].add(3);
+            }
+        }
+        else{
+            if(weaponsInLanes[laneIndex] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(4);
+                weaponsInLanes[laneIndex] = tmp;
+            }
+            else {
+                weaponsInLanes[laneIndex].add(4);
+            }
+
+        }
         Lane lane = easyBattle.getOriginalLanes().get(laneIndex);
         try {
             easyBattle.purchaseWeapon(weaponIndex + 1, lane);
@@ -298,7 +481,7 @@ public class Controller {
                 String titanName = t.getClass().getSimpleName();
                 int offset = 0;
                 if(t instanceof ColossalTitan) {
-                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/ColossalPng.jpeg").toURI().toString())));
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/ColossalPng.png").toURI().toString())));
                     offset = 50;
                 }
                 else if(t instanceof ArmoredTitan) {
@@ -333,6 +516,46 @@ public class Controller {
             }
             counter++;
         }
+    }
+
+    public void showPopupMenu(Stage primaryStage) {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.initOwner(primaryStage);
+
+        VBox popupVBox = new VBox();
+        popupVBox.setSpacing(10);
+        popupVBox.setPadding(new Insets(20));
+
+        Label sureLabel = new Label("Are you sure you want to exit the game?");
+
+        Button continueButton = new Button("Continue");
+        continueButton.setOnAction(e -> popupStage.close());
+
+        Button homeButton = new Button("Return To Home");
+        homeButton.setOnAction(e -> {
+            // Code to return to home screen
+            try {
+                returnToHomeScreen();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            // Assuming you have a method to launch the home screen
+            // new HomeScreen().start(new Stage());
+        });
+
+        // Add CSS classes
+        popupVBox.getStyleClass().add("popup-vbox");
+        sureLabel.getStyleClass().add("exitLabel");
+        continueButton.getStyleClass().add("inGamePopupContinue");
+        homeButton.getStyleClass().add("inGamePopupExit");
+
+        popupVBox.getChildren().addAll(sureLabel, continueButton, homeButton);
+
+        Scene popupScene = new Scene(popupVBox, 700, 300);
+        popupScene.getStylesheets().add(getClass().getResource("css/HomeButtons.css").toExternalForm());
+        popupStage.setScene(popupScene);
+        popupStage.showAndWait();
     }
 
     public static void main(String[] args) {

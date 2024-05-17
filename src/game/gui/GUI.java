@@ -17,9 +17,6 @@ public class GUI extends Application {
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setAutoPlay(true);
         stage.show();
-
-//        Image cursorImage = new Image("file:src/game/gui/images/cursor.png");
-
         Font.loadFont(
                 getClass().getResource("fonts/Skranji-Bold.ttf").toExternalForm(),
                 12
@@ -28,10 +25,8 @@ public class GUI extends Application {
         Parent root = loader.load();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("css/HomeButtons.css").toExternalForm());
-//        scene.setCursor(new ImageCursor(cursorImage, cursorImage.getWidth() / 2, cursorImage.getHeight() / 2));
         stage.setScene(scene);
         stage.setTitle("Game");
-//        stage.setFullScreen(true);
         stage.show();
     }
     public static void main(String[] args) {

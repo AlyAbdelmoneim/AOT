@@ -4,6 +4,7 @@ import game.engine.BattlePhase;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -39,18 +40,21 @@ public class GamePlayGUI2 extends Application {
 
     public GamePlayGUI2() {
         turnNumberLabel = new Label();
+        turnNumberLabel.getStyleClass().add("GameBarlabel");
         scoreLabel = new Label();
+        scoreLabel.getStyleClass().add("GameBarlabel");
         currentResourcesLabel = new Label();
+        currentResourcesLabel.getStyleClass().add("GameBarlabel");
         battlePhaseLabel = new Label();
+        battlePhaseLabel.getStyleClass().add("GameBarlabel");
         passTurn = new Button("Pass Turn");
         purchaseWeapon = new Button("Purchase Weapon");
-        wallHealth1 = new Label("Wall Health 1: ");
-        wallHealth2 = new Label("Wall Health 2: ");
-        wallHealth3 = new Label("Wall Health 3: ");
-        wallHealth4 = new Label("Wall Health 4: ");
-        wallHealth5 = new Label("Wall Health 5: ");
+        wallHealth1 = new Label();
+        wallHealth2 = new Label();
+        wallHealth3 = new Label();
+        wallHealth4 = new Label();
+        wallHealth5 = new Label();
         mainGrid = new GridPane();
-
         titansGrid = new GridPane();
         titansGrid.setPrefWidth(1160);
         titansGrid.setPrefHeight(900);
@@ -68,11 +72,24 @@ public class GamePlayGUI2 extends Application {
         GridPane labelsGrid = new GridPane();
         HBox hBox = new HBox();
         hBox.setPrefSize(1600, 100);
-        hBox.setPadding(new Insets(10, 10, 10, 10));
-        hBox.setSpacing(10);
-        hBox.getChildren().addAll(turnNumberLabel, scoreLabel, currentResourcesLabel, battlePhaseLabel, wallHealth1, wallHealth2, wallHealth3,wallHealth4, wallHealth5, passTurn, purchaseWeapon);
-
+        hBox.setPadding(new Insets(40, 300, 10, 10)); // Added top padding
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(20);
+        hBox.getChildren().addAll(turnNumberLabel, scoreLabel, currentResourcesLabel, battlePhaseLabel,  passTurn, purchaseWeapon);
         labelsGrid.add(hBox, 0, 0);
+        passTurn.getStyleClass().add("pass-turn-button");
+        purchaseWeapon.getStyleClass().add("purchase-weapon-button");
+
+
+        Region labelsBackground = new Region();
+        labelsBackground.setStyle("-fx-background-color: rgba(47, 47, 47, 0.8);"); // Example: semi-transparent white background
+
+        labelsGrid.getChildren().add(labelsBackground);
+
+        labelsBackground.prefWidthProperty().bind(labelsGrid.widthProperty());
+        labelsBackground.prefHeightProperty().bind(labelsGrid.heightProperty());
+
+        labelsBackground.toBack();
 
         VBox walls = new VBox();
         walls.setMaxSize(40, 900);
@@ -121,8 +138,29 @@ public class GamePlayGUI2 extends Application {
 
         wallsAndTitans.setTranslateX(300);
 
+        try {
+            Image backgroundImage = new Image(new FileInputStream("src/game/gui/images/GameMap2.png"));
+            BackgroundSize backgroundSize = new BackgroundSize(1600, 900, false, false, true, true);
+            BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+            mainGrid.setBackground(new Background(background));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         Scene scene = new Scene(mainGrid, 1600, 900, Color.WHITE);
         scene.getStylesheets().add(getClass().getResource("css/HomeButtons.css").toExternalForm());
+
+        scene.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ESCAPE:
+                    controller.showPopupMenu(stage);
+                    break;
+                default:
+                    break;
+            }
+        });
+        scene.getStylesheets().add(getClass().getResource("css/HomeButtons.css").toExternalForm());
+
         stage.setScene(scene);
         stage.show();
     }
