@@ -121,6 +121,42 @@ public class Battle {
     public ArrayList<Lane> getOriginalLanes() {
         return originalLanes;
     }
+    public Battle copy() throws IOException {
+        Battle newBattle = new Battle(this.numberOfTurns, this.score, this.titanSpawnDistance, this.getOriginalLanes().size(), this.getResourcesGathered());
+
+        newBattle.setBattlePhase(this.getBattlePhase());
+//        newBattle.setNumberOfTitansPerTurn(this.getNumberOfTitansPerTurn());
+        newBattle.setResourcesGathered(this.getResourcesGathered());
+        newBattle.setScore(this.getScore());
+        newBattle.setTitanSpawnDistance(this.getTitanSpawnDistance());
+        newBattle.setNumberOfTurns(this.getNumberOfTurns());
+
+        newBattle.getOriginalLanes().clear();
+        newBattle.getLanes().clear();
+        for (Lane l : this.getOriginalLanes()) {
+            Lane newLane = new Lane(l.getLaneWall().copyWall());
+            for (Weapon w : l.getWeapons()) {
+                newLane.addWeapon(w.copyWeapon());
+            }
+            for (Titan t : l.getTitans()) {
+                newLane.addTitan(t.copyTitan());
+            }
+            newBattle.getOriginalLanes().add(newLane);
+            newBattle.getLanes().add(newLane);
+        }
+        newBattle.getApproachingTitans().clear();
+        for (Titan t : this.getApproachingTitans()) {
+            newBattle.getApproachingTitans().add(t.copyTitan());
+        }
+        return newBattle;
+    }
+    public int getDangerSum() {
+        int total = 0;
+        for (Lane l : this.getOriginalLanes()) {
+            total += l.getDangerLevel();
+        }
+        return total;
+    }
 
     private void initializeLanes(int numOfLanes) {
         for (int i = 0; i < numOfLanes; i++) {

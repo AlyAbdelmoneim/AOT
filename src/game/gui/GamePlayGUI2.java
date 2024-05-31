@@ -29,14 +29,19 @@ public class GamePlayGUI2 extends Application {
     private Controller2 controller;
     Button passTurn;
     Button purchaseWeapon;
+    Button AIButton;
     Label wallHealth1;
     Label wallHealth2;
     Label wallHealth3;
     Label wallHealth4;
     Label wallHealth5;
     GridPane mainGrid;
-    //    GridPane grid;
     GridPane titansGrid;
+    Pane lane1Weapons;
+    Pane lane2Weapons;
+    Pane lane3Weapons;
+    Pane lane4Weapons;
+    Pane lane5Weapons;
 
     public GamePlayGUI2() {
         turnNumberLabel = new Label();
@@ -58,6 +63,19 @@ public class GamePlayGUI2 extends Application {
         titansGrid = new GridPane();
         titansGrid.setPrefWidth(1160);
         titansGrid.setPrefHeight(900);
+        lane1Weapons = new Pane();
+        lane1Weapons.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        lane2Weapons = new Pane();
+        lane2Weapons.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        lane3Weapons = new Pane();
+        lane3Weapons.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        lane4Weapons = new Pane();
+        lane4Weapons.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        lane5Weapons = new Pane();
+        lane5Weapons.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        AIButton = new Button("AI");
+        AIButton.getStyleClass().add("pass-turn-button");
+
     }
 
     public void setController(Controller2 controller) {
@@ -75,7 +93,7 @@ public class GamePlayGUI2 extends Application {
         hBox.setPadding(new Insets(40, 300, 10, 10)); // Added top padding
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(20);
-        hBox.getChildren().addAll(turnNumberLabel, scoreLabel, currentResourcesLabel, battlePhaseLabel,  passTurn, purchaseWeapon);
+        hBox.getChildren().addAll(turnNumberLabel, scoreLabel, currentResourcesLabel, battlePhaseLabel,  passTurn, purchaseWeapon, AIButton);
         labelsGrid.add(hBox, 0, 0);
         passTurn.getStyleClass().add("pass-turn-button");
         purchaseWeapon.getStyleClass().add("purchase-weapon-button");
@@ -123,7 +141,22 @@ public class GamePlayGUI2 extends Application {
         walls.getChildren().addAll(wall1, wall2, wall3, wall4, wall5);
 
         HBox wallsAndTitans = new HBox();
-        wallsAndTitans.getChildren().addAll(walls, titansGrid);
+//        wallsAndTitans.getChildren().addAll(walls, titansGrid);
+
+        VBox weapons = new VBox();
+        weapons.setMaxSize(40, 900);
+        lane1Weapons.setPrefSize(40, 300);
+        lane2Weapons.setPrefSize(40, 300);
+        lane3Weapons.setPrefSize(40, 300);
+        lane4Weapons.setPrefSize(40, 300);
+        lane5Weapons.setPrefSize(40, 300);
+        weapons.getChildren().addAll(lane1Weapons, lane2Weapons, lane3Weapons, lane4Weapons, lane5Weapons);
+
+        StackPane wallsAndWeapons = new StackPane();
+        wallsAndWeapons.getChildren().addAll(walls, weapons);
+
+        wallsAndTitans.getChildren().addAll(wallsAndWeapons, titansGrid);
+
 
 
         // Set constraints for labelsGrid
@@ -132,9 +165,9 @@ public class GamePlayGUI2 extends Application {
 
         mainGrid = new GridPane();
 
-        mainGrid.add(labelsGrid, 0, 0);
 
         mainGrid.add(wallsAndTitans, 0, 1);
+        mainGrid.add(labelsGrid, 0, 0);
 
         wallsAndTitans.setTranslateX(300);
 

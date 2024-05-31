@@ -13,6 +13,10 @@ public class Wall implements Attackee
 		this.baseHealth = baseHealth;
 		this.currentHealth = baseHealth;
 	}
+	public Wall copyWall()
+	{
+		return new Wall(this.baseHealth);
+	}
 
 	public int getBaseHealth()
 	{

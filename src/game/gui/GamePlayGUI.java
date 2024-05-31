@@ -40,6 +40,8 @@ public class GamePlayGUI extends Application {
     Pane lane1Weapons;
     Pane lane2Weapons;
     Pane lane3Weapons;
+    Button AIButton;
+
 
     public GamePlayGUI() {
         turnNumberLabel = new Label();
@@ -52,6 +54,8 @@ public class GamePlayGUI extends Application {
         battlePhaseLabel.getStyleClass().add("GameBarlabel");
         passTurn = new Button("Pass Turn");
         purchaseWeapon = new Button("Purchase Weapon");
+        AIButton = new Button("AI");
+        AIButton.getStyleClass().add("pass-turn-button");
         mainGrid = new GridPane();
         titansGrid = new GridPane();
         titansGrid.setPrefWidth(1160);
@@ -78,7 +82,7 @@ public class GamePlayGUI extends Application {
         hBox.setPadding(new Insets(40, 300, 10, 10)); // Added top padding
         hBox.setAlignment(Pos.CENTER);
         hBox.setSpacing(20);
-        hBox.getChildren().addAll(turnNumberLabel, scoreLabel, currentResourcesLabel, battlePhaseLabel,  passTurn, purchaseWeapon);
+        hBox.getChildren().addAll(turnNumberLabel, scoreLabel, currentResourcesLabel, battlePhaseLabel,  passTurn, purchaseWeapon, AIButton);
         labelsGrid.add(hBox, 0, 0);
         passTurn.getStyleClass().add("pass-turn-button");
         purchaseWeapon.getStyleClass().add("purchase-weapon-button");
@@ -115,6 +119,7 @@ public class GamePlayGUI extends Application {
         wall3.setOnMouseClicked(e -> handleWallButtonClick(2));
 
 
+        HBox wallsAndTitans = new HBox();
         walls.getChildren().addAll(wall1, wall2, wall3);
 
         VBox weapons = new VBox();
@@ -127,7 +132,6 @@ public class GamePlayGUI extends Application {
         StackPane wallsAndWeapons = new StackPane();
         wallsAndWeapons.getChildren().addAll(walls, weapons);
 
-        HBox wallsAndTitans = new HBox();
         wallsAndTitans.getChildren().addAll(wallsAndWeapons, titansGrid);
 
 
@@ -136,9 +140,9 @@ public class GamePlayGUI extends Application {
         col.setPercentWidth(10);
 
 
-        mainGrid.add(labelsGrid, 0, 0); // Keep labelsGrid in row 0
 
         mainGrid.add(wallsAndTitans, 0, 1); // Move wallsAndTitans to row 1
+        mainGrid.add(labelsGrid, 0, 0); // Keep labelsGrid in row 0
 
         wallsAndTitans.setTranslateX(300);
 

@@ -42,22 +42,62 @@ public class Controller2 {
 
     private ArrayList<Lane> lanes = new ArrayList<>();
     private boolean gameOverTriggered = false;
+    private HashSet<Integer>[] weaponsInLanes;
 
     public Controller2() throws Exception {
         easyBattle = new Battle(1, 0, 80, 5, 125);
         gamePlayGUI = new GamePlayGUI2();
         gamePlayGUI.setController(this);
-        updateUI();
         gamePlayGUI.start(new Stage());
         gamePlayGUI.passTurn.setOnAction(e -> passTurn());
         gamePlayGUI.purchaseWeapon.setOnAction(e -> chooseWeaponAndLane(new Stage()));
         lanes = new ArrayList<>();
         lanes.addAll(easyBattle.getLanes());
+        weaponsInLanes = new HashSet[5];
+        for(int i = 0; i < 5; i++){
+            weaponsInLanes[i] = new HashSet<>();
+        }
+        gamePlayGUI.AIButton.setOnAction(e -> {
+            try {
+                AImove(3);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        updateUI();
     }
 
     private void updateUI() {
         updateLabels();
         addTitans();
+        updateWeapons();
+    }
+    private void updateWeapons(){
+        for(int i = 0; i < 5; i++) {
+            for(int x : weaponsInLanes[i]){
+                Circle circle = new Circle(40);
+                int offset = -30;
+                if(x == 1) {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/piercing.png").toURI().toString())));
+                    offset += 20;
+                }
+                else if(x == 2) {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/sniper.png").toURI().toString())));
+                    offset += 70;
+                }
+                else if(x == 3) {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/volley.png").toURI().toString())));
+                    offset += 110;
+                }
+                else {
+                    circle.setFill(new ImagePattern(new Image(new File("src/game/gui/images/walltrap.png").toURI().toString())));
+                    offset += 150;
+                }
+                gamePlayGUI.lane1Weapons.getChildren().add(circle);
+                circle.setTranslateX(0);
+                circle.setTranslateY(i * 300 + offset);
+            }
+        }
     }
 
     public void gameEndStage(String message) {
@@ -383,6 +423,118 @@ public class Controller2 {
         popupScene.getStylesheets().add(getClass().getResource("css/HomeButtons.css").toExternalForm());
         popupStage.setScene(popupScene);
         popupStage.showAndWait();
+    }
+    public void purchaseAI(int weaponNo, int laneNo){
+        if(weaponNo-1 == 0){
+            if(weaponsInLanes[laneNo] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(1);
+                weaponsInLanes[laneNo] = tmp;
+            }
+            else {
+                weaponsInLanes[laneNo].add(1);
+            }
+        }
+        else if(weaponNo-1 == 1){
+            if(weaponsInLanes[laneNo] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(2);
+                weaponsInLanes[laneNo] = tmp;
+            }
+            else {
+                weaponsInLanes[laneNo].add(2);
+            }
+
+        }
+        else if(weaponNo-1 == 2){
+            if(weaponsInLanes[laneNo] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(3);
+                weaponsInLanes[laneNo] = tmp;
+            }
+            else {
+                weaponsInLanes[laneNo].add(3);
+            }
+        }
+        else{
+            if(weaponsInLanes[laneNo] == null){
+                HashSet<Integer> tmp = new HashSet<>();
+                tmp.add(4);
+                weaponsInLanes[laneNo] = tmp;
+            }
+            else {
+                weaponsInLanes[laneNo].add(4);
+            }
+
+        }
+        try {
+            easyBattle.purchaseWeapon(weaponNo, easyBattle.getOriginalLanes().get(laneNo));
+        } catch (InsufficientResourcesException e) {
+            exceptionStage(e.getMessage());
+        } catch (InvalidLaneException e) {
+            exceptionStage(e.getMessage());
+        } catch (NullPointerException npe){
+            gameOverTriggered = true;
+            playGameOverSound();
+            gameEndStage("Game Over");
+        }
+        updateUI();
+
+    }
+    int bestScore;
+    String moves;
+    int bestDanger;
+    public void AImove(int turnsAhead) throws IOException {
+        bestScore = -1;
+        moves = "";
+        backtracking(turnsAhead, "", easyBattle.copy());
+        if(moves.charAt(0) == '0'){
+            try{
+                easyBattle.passTurn();
+            } catch (NullPointerException e) {
+                if (!gameOverTriggered) {
+                    gameOverTriggered = true;
+                    playGameOverSound();
+                    gameEndStage("Game Over");
+                }
+
+            }
+        }
+        else purchaseAI(moves.charAt(0) - '0', moves.charAt(1) - '0');
+        updateUI();
+
+    }
+    public void backtracking(int turnAhead, String moves, Battle b) throws IOException {
+        if(turnAhead == 0){
+            if(bestScore == -1 || b.getScore() > bestScore){
+                bestScore = b.getScore();
+                this.moves = moves;
+                bestDanger = b.getDangerSum();
+            }
+            else if(b.getScore() == bestScore && b.getDangerSum() < bestDanger){
+                bestScore = b.getScore();
+                this.moves = moves;
+                bestDanger = b.getDangerSum();
+            }
+            return;
+        }
+        for(int i = 0; i < 5; i++){
+            for(int j = 1; j <= 4; j++){
+                if(b.getResourcesGathered() < b.getWeaponFactory().getWeaponShop().get(j).getPrice()) continue;
+                if(b.getOriginalLanes().get(i).isLaneLost()) continue;
+                Battle b2 = b.copy();
+                try {
+                    b2.purchaseWeapon(j, b2.getOriginalLanes().get(i));
+                } catch (InsufficientResourcesException e) {
+                    continue;
+                } catch (InvalidLaneException e) {
+                    continue;
+                }
+                backtracking(turnAhead - 1, moves + j + i, b2);
+            }
+        }
+        backtracking(turnAhead - 1, moves + 0+0, b.copy());
+
     }
 
     public static void main(String[] args) {
