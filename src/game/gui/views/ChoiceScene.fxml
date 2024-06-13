@@ -5,7 +5,6 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
@@ -13,43 +12,51 @@
    <children>
       <Pane layoutX="112.0" layoutY="45.0" prefHeight="900.0" prefWidth="1600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ImageView fitHeight="900.0" fitWidth="1608.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="1093.0" fitWidth="1904.0" layoutX="-304.0" layoutY="-72.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/Choice_backgroung2.png" />
+                  <Image url="@../images/attack-on-titan-armored-titan-vs-attack-titan-ui2e1oyb7dkmwy53.jpg" />
                </image>
             </ImageView>
-            <Label layoutX="19.0" layoutY="-7.0" prefHeight="138.0" prefWidth="343.0" stylesheets="@../css/HomeButtons.css" text="PLAY" textFill="#c90101">
+            <Pane opacity="0.7" prefHeight="900.0" prefWidth="1600.0" style="-fx-background-color: black;" />
+            <Pane layoutY="30.0" opacity="0.42" prefHeight="60.0" prefWidth="1600.0" style="-fx-background-color: #00000;" />
+            <Label alignment="CENTER" layoutX="-56.0" layoutY="30.0" prefHeight="61.0" prefWidth="1646.0" stylesheets="@../css/HomeButtons.css" text="Select Your Difficulty" textAlignment="RIGHT" textFill="#f2f2f2">
                <font>
-                  <Font name="System Bold Italic" size="80.0" />
+                  <Font name="DarksSkyrimFont" size="55.0" />
                </font>
             </Label>
-            <Pane layoutY="120.0" prefHeight="60.0" prefWidth="1600.0" style="-fx-background-color: #2f2f2f;" />
-            <Label alignment="CENTER" layoutX="-70.0" layoutY="120.0" prefHeight="61.0" prefWidth="400.0" styleClass="label2" stylesheets="@../css/HomeButtons.css" text="Select Your Difficulty" textAlignment="RIGHT" textFill="#f2f2f2" />
-            <Button layoutX="603.0" layoutY="237.0" mnemonicParsing="false" onAction="#switchToGamePlaySceneEasy" prefHeight="533.0" prefWidth="351.0" styleClass="choice" stylesheets="@../css/HomeButtons.css">
-               <graphic>
-                  <BorderPane prefHeight="533.0" prefWidth="351.0" style="-fx-border-color: ffb000; -fx-border-width: 5;">
-                     <bottom>
-                        <Pane opacity="0.72" prefHeight="100.0" prefWidth="354.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
-                           <children>
-                              <Label layoutX="-1.0" layoutY="-2.0" prefHeight="102.0" prefWidth="356.0" styleClass="label3" stylesheets="@../css/HomeButtons.css" text="NORMAL" />
-                           </children>
-                        </Pane>
-                     </bottom>
-                  </BorderPane>
-               </graphic></Button>
-            <Button layoutX="1047.0" layoutY="235.0" mnemonicParsing="false" onAction="#switchToGamePlaySceneMedium" prefHeight="533.0" prefWidth="351.0" styleClass="choice2" stylesheets="@../css/HomeButtons.css">
-               <graphic>
-                  <BorderPane prefHeight="533.0" prefWidth="351.0" style="-fx-border-color: #ffb000; -fx-border-width: 5;">
-                     <bottom>
-                        <Pane opacity="0.5" prefHeight="100.0" prefWidth="354.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
-                           <children>
-                              <Label cache="true" prefHeight="102.0" prefWidth="356.0" styleClass="label3" stylesheets="@../css/HomeButtons.css" text="BRUTAL" />
-                           </children>
-                        </Pane>
-                     </bottom>
-                  </BorderPane>
-               </graphic></Button>
-            <Button layoutX="43.0" layoutY="800.0" mnemonicParsing="false" onAction="#switchToHomeScene" onMouseClicked="#clickSoundEffect" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="&lt;  Back" />
+            <ImageView fitHeight="598.0" fitWidth="569.0" layoutX="727.0" layoutY="30.0">
+               <image>
+                  <Image url="@../images/jh-kim-6-removebg-preview.png" />
+               </image>
+            </ImageView>
+            <Button alignment="CENTER" layoutX="41.0" layoutY="670.0" mnemonicParsing="false" onAction="#switchToHomeScene" onMouseClicked="#clickSoundEffect" prefHeight="138.0" prefWidth="218.0" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="Back" />
+            <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="905.0" layoutY="260.0">
+               <image>
+                  <Image url="@../images/attack-on-titan-2-a-o-t-wings-of-freedom-koei-tecmo-video-game-attack-on-titan-62257cf8e2ea1846afaf16445729bd52.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="598.0" fitWidth="569.0" layoutX="194.0" layoutY="30.0">
+               <image>
+                  <Image url="@../images/jh-kim-6-removebg-preview.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="882.0" layoutY="199.0" mnemonicParsing="false" onAction="#switchToGamePlaySceneMedium" opacity="0.0" prefHeight="322.0" prefWidth="263.0" styleClass="choice2" stylesheets="@../css/HomeButtons.css" />
+            <ImageView fitHeight="200.0" fitWidth="176.0" layoutX="383.0" layoutY="267.0">
+               <image>
+                  <Image url="@../images/Daco_4185074.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="341.0" layoutY="185.0" mnemonicParsing="false" onAction="#switchToGamePlaySceneEasy" opacity="0.0" prefHeight="354.0" prefWidth="279.0" style="-fx-cursor: hand;" styleClass="choice" stylesheets="@../css/HomeButtons.css" />
+            <Label layoutX="418.0" layoutY="611.0" text="Normal" textFill="#a61a01">
+               <font>
+                  <Font name="DarksSkyrimFont" size="42.0" />
+               </font>
+            </Label>
+            <Label layoutX="955.0" layoutY="609.0" text="Brutal" textFill="#a61a01">
+               <font>
+                  <Font name="DarksSkyrimFont" size="42.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
    </children>

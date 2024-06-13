@@ -1,58 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.Double?>
+<?import java.net.URL?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.effect.GaussianBlur?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.media.Media?>
+<?import javafx.scene.media.MediaPlayer?>
+<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="834.0" prefWidth="1576.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.gui.HomeController">
    <children>
       <Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1600.0">
          <children>
-            <ImageView fitHeight="928.0" fitWidth="1644.0" pickOnBounds="true" preserveRatio="true">
+            <MediaView fitHeight="0.0" fitWidth="1920.0" translateX="-200.0">
+               <mediaPlayer>
+                  <MediaPlayer>
+                     <media>
+                        <Media>
+                           <source>
+                              <URL value="@../images/4klivewall.mp4" />
+                           </source>
+                        </Media>
+                     </media>
+                  </MediaPlayer>
+               </mediaPlayer>
+            </MediaView>
+            <ImageView fitHeight="900.0" fitWidth="1652.0" layoutX="-52.0" translateX="42.0">
                <image>
-                  <Image url="@../images/BackgroundPhoto2.jpg" />
+                  <Image url="@../images/shadowhallow.png" />
                </image>
-               <effect>
-                  <GaussianBlur radius="0.0" />
-               </effect>
             </ImageView>
-            <Pane opacity="0.62" prefHeight="939.0" prefWidth="1642.0" style="-fx-background-color: black;">
-               <children>
-                  <Button blendMode="SRC_ATOP" layoutX="1361.0" layoutY="29.0" mnemonicParsing="false" onAction="#backgroundMusicControl" onMouseClicked="#clickSoundEffect" prefHeight="110.0" prefWidth="105.0" styleClass="soundControl" stylesheets="@../css/HomeButtons.css" />
-               </children></Pane>
-            <Button layoutY="618.0" mnemonicParsing="true" onAction="#switchToRulesScene" onMouseClicked="#clickSoundEffect" prefHeight="64.0" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="Rules">
-               <layoutX>
-                  <Double fx:value="600.0" />
-               </layoutX>
-            </Button>
-            <Button cache="true" cacheHint="SPEED" layoutY="513.0" mnemonicParsing="true" onAction="#switchToChoiceScene" onMousePressed="#clickSoundEffect" prefHeight="68.0" prefWidth="269.0" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="Play">
+            <Pane layoutX="-42.0" opacity="0.62" prefHeight="939.0" prefWidth="1684.0" style="-fx-background-color: black;" />
+            <Button cache="true" cacheHint="SPEED" layoutY="453.0" mnemonicParsing="true" onAction="#switchToChoiceScene" onMousePressed="#clickSoundEffect" prefHeight="185.0" prefWidth="291.0" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="Play" textFill="#ffb000" translateX="42.0" translateY="-100.0">
                <font>
                   <Font name="Adelle Sans Devanagari Bold" size="20.0" />
                </font>
                <layoutX>
-                  <Double fx:value="600.0" />
+                  <Double fx:value="578.0" />
                </layoutX>
                <cursor>
                   <Cursor fx:constant="DEFAULT" />
                </cursor>
             </Button>
-            <Button cache="true" cacheHint="SPEED" layoutX="600.0" layoutY="719.0" mnemonicParsing="true" onAction="#exitGame" onMouseClicked="#clickSoundEffect" prefHeight="68.0" prefWidth="269.0" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="Exit">
+            <Button layoutY="556.0" mnemonicParsing="true" onAction="#switchToRulesScene" onMouseClicked="#clickSoundEffect" prefHeight="200.0" prefWidth="316.0" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="Rules" translateX="42.0" translateY="-100.0">
+               <layoutX>
+                  <Double fx:value="566.0" />
+               </layoutX>
+            </Button>
+            <Button cache="true" cacheHint="SPEED" layoutX="578.0" layoutY="677.0" mnemonicParsing="true" onAction="#exitGame" onMouseClicked="#clickSoundEffect" prefHeight="185.0" prefWidth="291.0" styleClass="btn-home" stylesheets="@../css/HomeButtons.css" text="Exit" translateX="42.0" translateY="-100.0">
                <font>
                   <Font name="Adelle Sans Devanagari Bold" size="20.0" />
                </font>
             </Button>
+            <ImageView fitHeight="213.0" fitWidth="598.0" layoutX="460.0" layoutY="49.0" opacity="0.6" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/logo.png" />
+               </image>
+            </ImageView>
          </children>
       </Pane>
-      <ImageView fitHeight="213.0" fitWidth="598.0" layoutX="419.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/AOT slogan.png" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

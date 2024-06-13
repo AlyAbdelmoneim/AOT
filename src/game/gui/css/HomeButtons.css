@@ -1,29 +1,29 @@
 
 .btn-home {
-    -fx-pref-width: 250px;
-    -fx-background-radius: 8px;
+    -fx-background-image: url('../images/buttonStock1.png');
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-color: transparent;
     -fx-font-family: 'Skranji';
     -fx-font-size: 25px;
     -fx-font-weight: 400;
     -fx-text-fill: #ffc000;
     -fx-text-alignment: center;
     -fx-padding: 10px 0;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #8b0000, #8b0000);
     -fx-cursor: hand;
-    -fx-border-color: #ffb000;
-    -fx-border-width: 4px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 0, 1, 3, 0);
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
 }
 
+
 .btn-home:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #e52b2b, #8b0000);
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 0, 0, 5, 5);
+    -fx-background-image: url('../images/buttonStock1h.png');
+    -fx-background-size: cover;
+    /*-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #e52b2b, #8b0000);*/
+    /*-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 0, 0, 5, 5);*/
 }
 
 .btn-home:pressed {
-    -fx-background-color: red;
     -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 0, 0, 5, 5);
 }
 .difficultyCard{
@@ -88,7 +88,7 @@
     -fx-text-fill: linear-gradient(from 0% 0% to 100% 100%, #8b0000, #8b0000);
 }
 .label2 {
-    -fx-font-family: 'Skranji';
+    -fx-font-family: 'DarkXShadowSkyrim';
     -fx-font-size: 20px;
     -fx-font-weight: bold;
     -fx-text-alignment: left;
@@ -169,33 +169,6 @@
     /*-fx-content-display : flex;*/
     -fx-alignment: center;
 
-}
-.btn-home {
-    -fx-pref-width: 250px;
-    -fx-background-radius: 8px;
-    -fx-font-family: 'Skranji';
-    -fx-font-size: 25px;
-    -fx-font-weight: 400;
-    -fx-text-fill: #ffc000;
-    -fx-text-alignment: center;
-    -fx-padding: 10px 0;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #8b0000, #8b0000);
-    -fx-cursor: hand;
-    -fx-border-color: #ffb000;
-    -fx-border-width: 4px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 0, 1, 3, 0);
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-}
-
-.btn-home:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #e52b2b, #8b0000);
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 0, 0, 5, 5);
-}
-
-.btn-home:pressed {
-    -fx-background-color: red;
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 0, 0, 5, 5);
 }
 .game-grid {
     -fx-background-color: white ;
@@ -517,33 +490,6 @@
     /*-fx-content-display : flex;*/
     -fx-alignment: center;
 
-}
-.btn-home {
-    -fx-pref-width: 250px;
-    -fx-background-radius: 8px;
-    -fx-font-family: 'Skranji';
-    -fx-font-size: 25px;
-    -fx-font-weight: 400;
-    -fx-text-fill: #ffc000;
-    -fx-text-alignment: center;
-    -fx-padding: 10px 0;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #8b0000, #8b0000);
-    -fx-cursor: hand;
-    -fx-border-color: #ffb000;
-    -fx-border-width: 4px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 0, 1, 3, 0);
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-}
-
-.btn-home:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #e52b2b, #8b0000);
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 0, 0, 5, 5);
-}
-
-.btn-home:pressed {
-    -fx-background-color: red;
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 0, 0, 5, 5);
 }
 .game-grid {
     -fx-background-color: white ;
